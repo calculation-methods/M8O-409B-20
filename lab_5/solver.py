@@ -39,5 +39,3 @@ def Tridiagonal_matrix_algorithm(L, y):
         x.append(x[i - 1] * alpha[n - 1 - i] + beta[n - 1 - i])
 
     return x[::-1]
-
-print(Tridiagonal_matrix_algorithm([[ 1.,    0.,    0.  ], [ 0.04, -2.08,  0.04], [ 0.,    0.,    1.  ]], [ 0.00000000e+00, -2.17741309e-16,  0.00000000e+00]))
