@@ -14,7 +14,8 @@ h = 0.1
 tau = 0.1
 n = int((x1 - x0) / h) + 1
 m = int((t) / tau) + 1
-
+c_0 = 1
+c_1 = 0
 
 def initial_conditions(x):
     return np.sin(2 * np.pi * x)
@@ -42,15 +43,21 @@ def explcit_scheme():
     return np.array(u)
 
 
-def im_step(u, k):
+def im_step(u, k, b_approx='2p1o'):
 
     n = len(u)
     A = np.zeros((n, n))
     b = np.zeros(n)
     b[0] = boundary_conditions(t=k*tau, x=x0)
-    A[0][0] = 1
+    if(b_approx == '2p1o'):
+        A[0][0] = c_0 - c_1 / h
+        A[0][1] = c_1 / h
+
     b[-1] = boundary_conditions(t=k*tau, x=x1)
-    A[n-1][n-1] = 1
+
+    if(b_approx == '2p1o'):
+        A[n-1][n-1] = c_0 + c_1 / h
+        A[n-1][n-2] = -c_1 / h
 
     for j in range(1,n-1):
         A[j][j-1] = alpha / h**2
@@ -83,13 +90,12 @@ def ex_im_scheme(theta=0.5):
 fig, ax = plt.subplots(1, 2, subplot_kw={"projection": "3d"})
 
 fig.canvas.set_window_title('lab 5')
-
 # Make data.
 X = np.linspace(x0, x1, n)
 T = np.linspace(0, t, m)
 X, T = np.meshgrid(X, T)
 U_true = np.exp(-4*np.pi**2 * alpha * T) * np.sin(2 * np.pi * X)
-U = ex_im_scheme(theta=0.5)
+U = ex_im_scheme(theta=0)
 
 
 ax[0].set_title('calculated\n solution')
