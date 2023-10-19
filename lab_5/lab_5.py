@@ -3,30 +3,43 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator
+import argparse
+
 plt.style.use("Solarize_Light2")
 
+parser = argparse.ArgumentParser(description='Solve PDE and draw it')
 
+parser.add_argument('--theta', type=float,
+                    help=' 0 < theta < 1 - implicit/explicit; 0.5-default', default=0.5, required=False )
+parser.add_argument("-d", "--draw", action="store_true",
+                    help="show and save solution")
+args = parser.parse_args()
+
+#paramters
 x0 = 0
 x1 = 1
-t = 2
-alpha = 0.05
-h = 0.1
-tau = 0.1
+t = 5
+alpha = 0.01
+h = 0.05
+tau = 0.05
 n = int((x1 - x0) / h) + 1
 m = int((t) / tau) + 1
 c_0 = 1
-c_1 = 0
+theta = args.theta_val
 
+#initial conditions
 def initial_conditions(x):
     return np.sin(2 * np.pi * x)
 
+#boundary conditions
 def boundary_conditions(t=t, x=0, x0=x0, x1=x1, u0=0, u1=0):
     return (x == x0) * u0 + (x == x1) * u1
 
-
+#computation
 def ex_step(u, k):
     l = []
     l.append(boundary_conditions(t=k*tau, x=x0))
+
     for j in range(1, n-1):
         u_c = (alpha * tau / h**2) * (u[j - 1] - 2 * u[j] + u[j + 1]) + u[j]
         l.append(u_c)
@@ -43,21 +56,17 @@ def explcit_scheme():
     return np.array(u)
 
 
-def im_step(u, k, b_approx='2p1o'):
+def im_step(u, k):
 
     n = len(u)
     A = np.zeros((n, n))
     b = np.zeros(n)
+
     b[0] = boundary_conditions(t=k*tau, x=x0)
-    if(b_approx == '2p1o'):
-        A[0][0] = c_0 - c_1 / h
-        A[0][1] = c_1 / h
+    A[0][0] = c_0
 
     b[-1] = boundary_conditions(t=k*tau, x=x1)
-
-    if(b_approx == '2p1o'):
-        A[n-1][n-1] = c_0 + c_1 / h
-        A[n-1][n-2] = -c_1 / h
+    A[n-1][n-1] = c_0
 
     for j in range(1,n-1):
         A[j][j-1] = alpha / h**2
@@ -87,21 +96,28 @@ def ex_im_scheme(theta=0.5):
     return np.array(u)
 
 
+#draw
 fig, ax = plt.subplots(1, 2, subplot_kw={"projection": "3d"})
 
-fig.canvas.set_window_title('lab 5')
+fig.canvas.manager.set_window_title('lab 5')
+ax[0].set_title('calculated\n solution')
+ax[1].set_title('analitycal\n solution')
+
 # Make data.
 X = np.linspace(x0, x1, n)
 T = np.linspace(0, t, m)
 X, T = np.meshgrid(X, T)
 U_true = np.exp(-4*np.pi**2 * alpha * T) * np.sin(2 * np.pi * X)
-U = ex_im_scheme(theta=0)
+U = ex_im_scheme(theta=theta)
 
 
-ax[0].set_title('calculated\n solution')
-ax[1].set_title('analitycal\n solution')
 # Plot the surface.
 surf = ax[0].plot_surface(X, T, U, cmap=cm.coolwarm, linewidth=0, antialiased=False)
 surf1 = ax[1].plot_surface(X, T, U_true, cmap=cm.coolwarm, linewidth=0, antialiased=False,)
 
-plt.show()
+if(args.draw):
+    plt.show()
+    plt.imsave('solutions.png', U_true)
+
+
+parser = argparse.ArgumentParser(description='solver')
