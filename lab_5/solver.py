@@ -23,18 +23,21 @@ def Tridiagonal_matrix_algorithm(L, y):
     b = np.array(b)
     c = np.array(c)
 
-    print(a, b, c)
+    alpha.append(-c[0]/b[0])
+    beta.append(y[0]/b[0])
 
-    alpha.append(-b[0]/c[0])
-    beta.append(y[0]/c[0])
+    for i in range(1, n-1):
+        d = a[i] * alpha[i-1] + b[i]
+        alpha.append(-c[i] / d)
+        beta.append((y[i] - a[i] * beta[i-1]) / d)
+    alpha.append(0)
+    beta.append((y[n - 1] - a[n-1] * beta[n-2]) / (a[n-1] * alpha[n-2] + b[n-1]))
 
-    for i in range(0, n-1):
-        alpha.append(-c[i] / (a[i] * alpha[i] + b[i]))
-        beta.append((y[i] - a[i] * beta[i]) / (a[i] * alpha[i] + b[i]))
+    x.append(beta[n-1])
 
-    x.append((y[n-1] - a[n-1] * beta[n-1]) / (a[n-1] * alpha[n-1] + b[n-1]))
-
-    for i in range(0, n - 1):
-        x.append(x[i] * alpha[n - i - 1] + beta[n - i - 1])
+    for i in range(1, n):
+        x.append(x[i - 1] * alpha[n - 1 - i] + beta[n - 1 - i])
 
     return x[::-1]
+
+print(Tridiagonal_matrix_algorithm([[ 1.,    0.,    0.  ], [ 0.04, -2.08,  0.04], [ 0.,    0.,    1.  ]], [ 0.00000000e+00, -2.17741309e-16,  0.00000000e+00]))
