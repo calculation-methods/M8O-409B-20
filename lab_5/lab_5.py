@@ -25,7 +25,7 @@ tau = 0.05
 n = int((x1 - x0) / h) + 1
 m = int((t) / tau) + 1
 c_0 = 1
-theta = args.theta_val
+theta = args.theta
 
 #initial conditions
 def initial_conditions(x):
