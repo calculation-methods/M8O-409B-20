@@ -8,5 +8,5 @@ usage
 ```
 help
 ```bash
-    help: python lab_5.py --help
+    python lab_5.py --help
 ```
