@@ -13,6 +13,8 @@ parser.add_argument('--theta', type=float,
                     help=' 0 < theta < 1 - implicit/explicit; 0.5-default', default=0.5, required=False )
 parser.add_argument("-d", "--draw", action="store_true",
                     help="show and save solution")
+parser.add_argument("-s", "--save", action="store_true",
+                    help="save solution to file")
 args = parser.parse_args()
 
 #paramters
@@ -118,6 +120,5 @@ surf1 = ax[1].plot_surface(X, T, U_true, cmap=cm.coolwarm, linewidth=0, antialia
 if(args.draw):
     plt.show()
     plt.imsave('solutions.png', U_true)
-
-
-parser = argparse.ArgumentParser(description='solver')
+if(args.draw):
+    np.savetxt('solution.csv', U, delimiter=',')
