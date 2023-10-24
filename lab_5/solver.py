@@ -1,5 +1,5 @@
 import numpy as np
-
+#solver
 def Tridiagonal_matrix_algorithm(L, y):
     a = [0]
     b =[L[0][0]]
