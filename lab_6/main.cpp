@@ -1,18 +1,20 @@
 #include <vector>
 #include <iostream>
 #include <cmath>
-#include "solver.hpp"
+#include <fstream>
+#include "math/solver.hpp"
 
-#define ALPHA 0.8
-#define LENGTH 3.1415
-#define TIME_SEGMENT 1.0
-#define N 11
-#define M 11
+#define ALPHA 0.5
+#define LENGTH 3.141592653589
+#define TIME_SEGMENT 2.0
+#define N 101
+#define M 101
 
 using namespace std;
 
 const double h = LENGTH / (N - 1);
 const double tau = TIME_SEGMENT / (M - 1);
+const double c = tau * tau * ALPHA * ALPHA / (h * h);
 
 double u_0(double x)
 {
@@ -21,7 +23,7 @@ double u_0(double x)
 
 double du_0(double x)
 {
-    return -ALPHA * sin(x);
+    return -ALPHA * cos(x);
 }
 
 double b_0(double t)
@@ -36,16 +38,22 @@ double b_1(double t)
 
 Vector first_layer(Vector zero_layer)
 {
+    /*
     Vector first_layer(N);
 
+    for(int i=0; i<N; i++)
+    {
+        first_layer[i] = zero_layer[i] + tau * du_0(i*h);
+    }
+    */
     Vector b(N);
     Matrix A(N, N);
 
     A[0][0] = 1;
     b[0] = b_0(tau);
 
-    double c = tau * tau * ALPHA * ALPHA / (h * h);
-
+    //filling A & b
+    
     for(int i=1; i < N-1; i++)
     {
         
@@ -54,10 +62,41 @@ Vector first_layer(Vector zero_layer)
         A[i][i] = -(1 + c);
         A[i][i + 1] = c / 2;
     }
+    
     A[N-1][N-1] = 1;
     b[N-1] = b_1(tau);
+    
 
     return Tridiagonal_matrix_algorithm(A, b);
+}
+
+Vector step_explicit(Vector x_0, Vector x_1, int k)
+{
+    Vector x(N);
+
+    x[0] = b_0(k*tau);
+
+    for(int i=1; i < N-1; i++)
+        x[i] = 2 * (1 - c) * x_1[i] + c * x_1[i-1] + c * x_1[i+1] - x_0[i];
+    x[N-1] = b_1(k*tau);
+    return x;
+}
+
+void save_to_file(vector<Vector> sol)
+{
+    std::ofstream file("sol.csv");
+    for(int k=0; k<sol.size(); k++)
+    {
+        for(int j=0; j<sol[k].len; j++)
+        {
+            file << sol[k][j];
+            if(j!=sol[k].len-1)
+             file << ",";
+        }
+        file << "\n";
+    }
+    file.close();
+    return;
 }
 int main()
 {   /*
@@ -91,13 +130,21 @@ int main()
     //sol.push_back(c);
     //cout << sol[1][1];
 
-    Vector zero_layer(N);
+    Vector zero(N);
     for(int i = 0; i < N; i++)
-        zero_layer[i] = 0.5;
+        zero[i] = u_0(i*h);
 
-    Vector first = first_layer(zero_layer);
-    for(int i = 0; i < N; i++)
-       cout << first[i] << endl;
+    Vector first = first_layer(zero);
 
+    std::vector<Vector> sol;
+
+    sol.push_back(zero);
+    sol.push_back(first);
+
+    for(int k=2; k<M; k++)
+    {
+        sol.push_back(step_explicit(sol[k-2], sol[k-1], k));
+    }
+    save_to_file(sol);
     return 0;
 }

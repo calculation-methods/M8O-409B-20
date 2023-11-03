@@ -1,8 +1,8 @@
-matrix.o: matrix.cpp matrix.hpp
-	g++ -c matrix.cpp -o tmp/matrix.o
+matrix.o: math/matrix.cpp math/matrix.hpp
+	g++ -c math/matrix.cpp -o tmp/matrix.o
 
-solver.o: solver.cpp solver.hpp
-	g++ -c solver.cpp -o tmp/solver.o
+solver.o: math/solver.cpp math/solver.hpp
+	g++ -c math/solver.cpp -o tmp/solver.o
 
 main.o: main.cpp
 	g++ -c main.cpp -o tmp/main.o

@@ -20,17 +20,21 @@ struct Matrix
     float *const matr;
     unsigned const rows;
     unsigned const cols;
+
 };
 
 struct Vector:Matrix
 {
-    Vector(int rows) : Matrix(rows, 1)
+    Vector(int rows) : Matrix(rows, 1), len(rows)
     {}
 
     float& operator[](int idx)
     {
         return *((this->matr) + idx);
     }
+
+    //vector<double>
+    unsigned const len;
 };
 
 Matrix dot(Matrix A, Matrix B);
