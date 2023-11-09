@@ -1,6 +1,22 @@
+#!/usr/bin/python
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
+import argparse
+import subprocess
+
+plt.style.use("Solarize_Light2")
+
+parser = argparse.ArgumentParser(description='Solve PDE and draw it')
+
+parser.add_argument("-i", "--impl", action="store_true",
+                    help="implicit solution(default - explicit)")
+args = parser.parse_args()
+
+if(args.impl):
+    subprocess.call(["./prog", "0"])
+if(args.impl):
+    subprocess.call(["./prog", "1"])
 
 sol = []
 with open('sol.csv', 'r') as file:
