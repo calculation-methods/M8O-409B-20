@@ -1,40 +1,11 @@
-#include <vector>
 #include <iostream>
-#include <cmath>
-#include <fstream>
-#include "math/solver.hpp"
-
-#define ALPHA 0.5
-#define LENGTH 3.141592653589
-#define TIME_SEGMENT 2.0
-#define N 101
-#define M 101
+#include "lab_6.hpp"
 
 using namespace std;
 
 const double h = LENGTH / (N - 1);
 const double tau = TIME_SEGMENT / (M - 1);
 const double c = tau * tau * ALPHA * ALPHA / (h * h);
-
-double u_0(double x)
-{
-    return sin(x);
-}
-
-double du_0(double x)
-{
-    return -ALPHA * cos(x);
-}
-
-double b_0(double t)
-{
-    return -sin(ALPHA * t);
-}
-
-double b_1(double t)
-{
-    return sin(ALPHA * t);
-}
 
 Vector first_layer(Vector zero_layer)
 {
@@ -70,6 +41,31 @@ Vector first_layer(Vector zero_layer)
     return Tridiagonal_matrix_algorithm(A, b);
 }
 
+Vector step_implicit(Vector x_0, Vector x_1, int k)
+{
+    //Vector x(N);
+    Matrix A(N, N);
+    Vector b(N);
+    //x[0] = b_0(k*tau);
+    //x[N-1] = b_1(k*tau);
+    A[0][0] = 1;
+    b[0] = b_0(k*tau);//-2/(tau*tau) x_1[0] + 1/(tau*tau) X
+
+    for(int i=1; i < N-1; i++)
+    {
+        A[i][i-1] = ALPHA*ALPHA / (h * h);
+        A[i][i] = -(2*ALPHA*ALPHA / (h * h) + 1 / (tau*tau));
+        A[i][i+1] = ALPHA*ALPHA / (h * h);
+        b[i] = -2/(tau*tau) * x_1[i] + 1/(tau*tau) * x_0[i];
+    }
+
+    A[N-1][N-1] = 1;
+    b[N-1] = b_1(k*tau);
+
+    auto x = Tridiagonal_matrix_algorithm(A, b);
+    return x;
+}
+
 Vector step_explicit(Vector x_0, Vector x_1, int k)
 {
     Vector x(N);
@@ -82,22 +78,7 @@ Vector step_explicit(Vector x_0, Vector x_1, int k)
     return x;
 }
 
-void save_to_file(vector<Vector> sol)
-{
-    std::ofstream file("sol.csv");
-    for(int k=0; k<sol.size(); k++)
-    {
-        for(int j=0; j<sol[k].len; j++)
-        {
-            file << sol[k][j];
-            if(j!=sol[k].len-1)
-             file << ",";
-        }
-        file << "\n";
-    }
-    file.close();
-    return;
-}
+
 int main()
 {   /*
     Matrix A(3, 3);
@@ -143,8 +124,9 @@ int main()
 
     for(int k=2; k<M; k++)
     {
-        sol.push_back(step_explicit(sol[k-2], sol[k-1], k));
+        sol.push_back(step_implicit(sol[k-2], sol[k-1], k));
     }
+
     save_to_file(sol);
     return 0;
 }
