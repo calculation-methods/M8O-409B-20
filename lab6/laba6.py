@@ -37,17 +37,13 @@ def run_through(a, b, c, d, s):
     return x
 
 
-def explicit(K, t, tau, h, x, approx_st, approx_bo):
+def explicit(K, t, tau, h, x):
     N = len(x)
     U = np.zeros((K, N))
     t += tau
     for j in range(N):
         U[0, j] = 0
-        # if approx_st == 1:
-        #     U[1][j] = 2 * np.cos(x[j]) * tau
-        # if approx_st == 2:
-        #     U[1][j] = 2 * np.cos(x[j]) * tau
-
+        
         U[1][j] = 2 * np.cos(x[j]) * tau
 
     for k in range(1, K - 1):
@@ -56,34 +52,18 @@ def explicit(K, t, tau, h, x, approx_st, approx_bo):
             U[k + 1, j] = (U[k, j+1] * (tau**2 / h**2) + U[k, j] * (-2 * tau**2 / h**2 + 2 - 3 * tau**2)
                            + U[k, j-1] * tau**2 / h**2 - U[k-1, j])
 
-        # if approx_bo == 1:
-        #     U[k + 1, 0] = func_border1(t)
-        #     U[k + 1, N - 1] = func_border2(t)
-        #
-        # elif approx_bo == 2:
-        #     U[k + 1, 0] = func_border1(t)
-        #     U[k + 1, N - 1] = func_border2(t)
-        #
-        # elif approx_bo == 3:
-        #     U[k + 1, 0] = func_border1(t)
-        #     U[k + 1, N - 1] = func_border2(t)
-
         U[k + 1, 0] = func_border1(t)
         U[k + 1, N - 1] = func_border2(t)
 
     return U
 
 
-def implicit(K, t, tau, h, x, approx_st, approx_bo):
+def implicit(K, t, tau, h, x):
     N = len(x)
     U = np.zeros((K, N))
     t += tau
     for j in range(N):
         U[0, j] = 0
-        # if approx_st == 1:
-        #     U[1][j] = 2 * np.cos(x[j]) * tau
-        # if approx_st == 2:
-        #     U[1][j] = 2 * np.cos(x[j]) * tau
 
         U[1, j] = 2 * np.cos(x[j]) * tau
 
@@ -99,37 +79,6 @@ def implicit(K, t, tau, h, x, approx_st, approx_bo):
             b[j] = -2 / h ** 2 - 1 / tau ** 2
             c[j] = 1 / h ** 2
             d[j] = U[k, j] * (3 - 2 / tau**2) + U[k-1, j] / tau**2
-
-        # if approx_bo == 1:
-        #     b[0] = 1
-        #     c[0] = 0
-        #     d[0] = func_border1(t)
-        #
-        #     a[N - 1] = 0
-        #     b[N - 1] = 1
-        #     d[N - 1] = func_border2(t)
-        #
-        # elif approx_bo == 2:
-        #     k0 = 1 / (2 * h) / c[1]
-        #     b[0] = (-3 / (2 * h)) + a[1] * k0
-        #     c[0] = 2 / h + b[1] * k0
-        #     d[0] = func_border1(t) + d[1] * k0
-        #
-        #     k1 = -(1 / (h * 2)) / a[N - 2]
-        #     a[N - 1] = (-2 / h) + b[N - 2] * k1
-        #     b[N - 1] = (3 / (h * 2)) + c[N - 2] * k1
-        #     d[N - 1] = func_border2(t) + d[N - 2] * k1
-        #
-        # elif approx_bo == 3:
-        #     b[0] = -1 - h ** 2 / 2 - h ** 2 / (2 * tau ** 2) - (3 * h ** 2) / (2 * tau)
-        #     c[0] = 1
-        #     d[0] = (func_border1(t) * (h - h ** 2 / 2) - (U[k, 0] * h ** 2) / tau ** 2
-        #             + (U[k - 1, 0] * h ** 2) / (2 * tau ** 2) - (U[k, 0] * 3 * h ** 2) / (2 * tau))
-        #
-        #     a[N - 1] = -1
-        #     b[N - 1] = 1 + h ** 2 / 2 + h ** 2 / (2 * tau ** 2) + (3 * h ** 2) / (2 * tau)
-        #     d[N - 1] = (func_border2(t) * (h + h ** 2 / 2) - (U[k, N - 1] * h ** 2) / tau ** 2
-        #                 - (U[k - 1, N - 1] * h ** 2) / (2 * tau ** 2) + (U[k, N - 1] * 3 * h ** 2) / (2 * tau))
 
         b[0] = 1
         c[0] = 0
@@ -166,26 +115,15 @@ while True:
     if method == 0:
         break
     else:
-        print("Выберите уровень апроксимации начальных условий:\n"
-              "(1) Первый порядок\n"
-              "(2) Второй порядок")
-        approx_st = int(input("=> "))
-
-        print("Выберите уровень апроксимации краевых условий:\n"
-              "(1) Двухточечная аппроксимация с первым порядком\n"
-              "(2) Трехточечная аппроксимация со вторым порядком\n"
-              "(3) Двухточечная аппроксимация со вторым порядком")
-        approx_bo = int(input("=> "))
-
         if method == 1:
             if tau / h ** 2 <= 1:
                 print("Условие Куррента выполнено:", tau / h ** 2, "<= 1\n")
-                U = explicit(K, t, tau, h, x, approx_st, approx_bo)
+                U = explicit(K, t, tau, h, x)
             else:
                 print("Условие Куррента не выполнено:", tau / h ** 2, "> 1")
                 break
         elif method == 2:
-            U = implicit(K, t, tau, h, x, approx_st, approx_bo)
+            U = implicit(K, t, tau, h, x)
 
     dt = int(input("Введите момент времени: "))
     print()
