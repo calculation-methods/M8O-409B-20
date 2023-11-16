@@ -101,7 +101,7 @@ time = 3
 
 h = np.pi / N
 tau = time / K
-print(h, tau)
+# print(h, tau)
 x = np.arange(0, np.pi + h / 2 - 1e-4, h)
 T = np.arange(0, time, tau)
 t = 0
