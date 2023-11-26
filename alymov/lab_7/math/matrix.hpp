@@ -14,10 +14,8 @@ struct Matrix
     {
         for(int i = 0; i < M.rows; i++)
         {
-            for(int j = 0; j < M.cols; j++)
-            {   
+            for(int j = 0; j < M.cols; j++) 
                 (*this)[i][j] = M.get(i, j);
-            }
         }
     }
 
@@ -43,9 +41,7 @@ struct Matrix
         for(int i = 0; i < B.rows; i++)
         {
             for(int j = 0; j < B.cols; j++)
-            {   
                 (*this)[i][j] += B.get(i, j);
-            }
         }
         return *this;
     }
@@ -61,9 +57,7 @@ struct Matrix
         for(int i = 0; i < this->rows; i++)
         {
             for(int j = 0; j < this->cols; j++)
-            {   
                 mul[i][j] *= k;
-            }
         }
         return mul;
     }
@@ -78,9 +72,7 @@ struct Matrix
         for(int i = 0; i < B.rows; i++)
         {
             for(int j = 0; j < B.cols; j++)
-            {   
                 (*this)[i][j] -= B.get(i, j);
-            }
         }
         return *this;
     }
@@ -94,6 +86,11 @@ struct Matrix
     float* operator[](int idx)
     {
         return ((this->matr) + idx * cols);
+    }
+
+    ~Matrix()
+    {
+        delete [] matr;
     }
     
     float* matr;
@@ -116,7 +113,6 @@ struct Vector:Matrix
         return *((this->matr) + idx);
     }
     using Matrix::operator=;
-    
     //vector<double>
     unsigned len;
 };

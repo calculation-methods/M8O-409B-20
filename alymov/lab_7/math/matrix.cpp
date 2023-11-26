@@ -1,24 +1,19 @@
 #include "matrix.hpp"
 
-
+//get matrix element
 float const & Matrix::get(int i, int j) const
 {
     return this->matr[i * cols + j];
 }
 
-/*
-float const & Matrix::get(int i, int j)
-{
-    return this->matr[i * cols + j];
-}
-*/
+//get vector element
 float const & Vector::get(int i) const
 {
     return this->matr[i];
 }
 
 
-
+//dot product = matrix multiplication
 Matrix dot(Matrix A, Matrix B)
 {
     if(A.cols != B.rows)
@@ -41,6 +36,7 @@ Matrix dot(Matrix A, Matrix B)
     return P;
 }
 
+//swap matrices fielda
 void Matrix::swap(Matrix &other)
 {
     std::swap(other.cols, cols);
@@ -48,6 +44,7 @@ void Matrix::swap(Matrix &other)
     std::swap(other.matr, matr);
 }
 
+//getting vect norm
 float norm(Vector B)
 {
     float max = -100000.0;
