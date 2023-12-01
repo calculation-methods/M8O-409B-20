@@ -7,7 +7,7 @@
 //matrices
 struct Matrix
 {
-
+    
     void swap(Matrix &other);
     Matrix(int rows, int cols) : rows(rows), cols(cols), matr(new float[rows * cols]){}
     Matrix(Matrix const & M) : rows(M.rows), cols(M.cols), matr(new float[M.rows * M.cols])
@@ -19,8 +19,11 @@ struct Matrix
         }
     }
 
+    ~Matrix()
+    {
+        delete [] matr;
+    }
 
-    float const & get(int i, int j) const;
     //float const & get(int i, int j);
 
     Matrix& operator=(Matrix other)
@@ -69,6 +72,7 @@ struct Matrix
             std::cout << "size mismatch! " << std::endl;
             return Matrix(B);
         }
+        
         for(int i = 0; i < B.rows; i++)
         {
             for(int j = 0; j < B.cols; j++)
@@ -88,11 +92,13 @@ struct Matrix
         return ((this->matr) + idx * cols);
     }
 
-    ~Matrix()
-    {
-        delete [] matr;
-    }
-    
+
+
+    float const & get(int i, int j) const;
+    Matrix get_row(int row) const;
+    Matrix get_col(int col) const;
+
+
     float* matr;
     unsigned rows;
     unsigned cols;
@@ -100,7 +106,7 @@ struct Matrix
 };
 
 //vectors
-struct Vector:Matrix
+struct Vector : Matrix
 {
     Vector(int rows) : Matrix(rows, 1), len(rows){}
 

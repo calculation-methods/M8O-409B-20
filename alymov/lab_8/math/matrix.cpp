@@ -64,9 +64,28 @@ void PrintMatrix(Matrix A)
     {
         for(int j=0; j < A.cols; j++)
         {
-            std::cout << A[i][j] << " ";
+            std::cout << A[i][j] << ", ";
         }
-        std:: cout << std::endl;
+        std::cout << std::endl;
     }
+    std::cout << std::endl;
     return;
+}
+
+Matrix Matrix::get_col(int col) const
+{
+    Vector col_vector(this->rows);
+
+    for(int i=0; i < this->cols; i++)
+        col_vector[i] = this->get(i, col);
+    return col_vector;
+}
+
+Matrix Matrix::get_row(int row) const
+{
+    Vector row_vector(this->cols);
+
+    for(int i=0; i< this->cols; i++)
+        row_vector[i] = this->get(row, i);
+    return row_vector;
 }
