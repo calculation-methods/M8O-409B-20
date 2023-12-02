@@ -1,5 +1,6 @@
 #include "lab_8.hpp"
 
+/// method: intit -> step -> step -> ...
 std::vector<Matrix> alterning_direction_method(){
     std::vector<Matrix> sol;
     
@@ -16,7 +17,6 @@ std::vector<Matrix> alterning_direction_method(){
     return sol;
 }
 
-
 Matrix init()
 {
     Matrix initial(M, N);
@@ -27,17 +27,98 @@ Matrix init()
     }
     return initial;
 }
-
+/// step: horizontal -> vertical
 Matrix step(Matrix& prev, int k)
 {
     Matrix u(prev.cols, prev.rows);
-    u = horizontal(prev, k);
-    u = vertical(u, k);
+    if(!method){
+        u = horizontal1(prev, k);
+        u = vertical1(u, k);
+    } else {
+        u = horizontal2(prev, k);
+        u = vertical2(u, k);
+    }
     return u;
 }
 
+Matrix horizontal1(Matrix& prev_sol, float k)
+{
+    Matrix sol(prev_sol.cols, prev_sol.rows);
+    Vector row_sol(prev_sol.cols);
 
-Matrix horizontal(Matrix& prev_sol, float k)
+    Matrix A(prev_sol.cols, prev_sol.cols);
+    Vector b(prev_sol.cols);
+
+    float y;
+    float t = k * TAU - TAU / 2;
+
+    for(int i = 1; i < prev_sol.rows-1; i++){
+        Vector prev_sol_row = prev_sol.get_row(i);
+        y = i * H_Y; 
+        A[0][0] = 1;
+        b[0] = U_X_0(0, y, t);
+
+        for(int j = 1; j < A.cols - 1; j++){
+            A[j][j - 1] = ALPHA_SQ * TAU / (2 * H_X * H_X);
+            A[j][j] = - 1 - 2 * ALPHA_SQ * TAU / (2 * H_X * H_X); 
+            A[j][j + 1] =  ALPHA_SQ * TAU / (2 * H_X * H_X);
+            b[j] = -1 * prev_sol_row[j] - TAU * ALPHA_SQ / (2 * H_Y * H_Y) * (prev_sol[j][i + 1] - 2 * prev_sol[j][i] + prev_sol[j][i - 1]);;
+        }
+        A[A.cols - 1][A.cols - 1] = 1;
+        b[A.cols - 1] = U_X_1(L, y, t);
+        
+        row_sol = Tridiagonal_matrix_algorithm(A, b);
+        embed_vector(sol, row_sol, false, i);
+    }
+
+    return sol;
+}
+
+Matrix vertical1(Matrix& prev_sol, float k)
+{
+    Matrix sol(prev_sol.cols, prev_sol.rows);
+    Vector col_sol(prev_sol.rows);
+
+    Matrix A(prev_sol.rows, prev_sol.rows);
+    Vector b(prev_sol.rows);
+
+    float x;
+    float t = k * TAU;
+
+    for(int i = 1; i < prev_sol.cols - 1; i++){
+        Vector prev_sol_col = prev_sol.get_col(i);
+        x = i * H_X;
+
+        A[0][0] = 1;
+        b[0] = U_Y_0(x, 0, t);
+
+        for(int j = 1; j < A.rows - 1; j++){
+            A[j][j - 1] = ALPHA_SQ * TAU / (2 * H_Y * H_Y);
+            A[j][j] = - 1 - 2 * ALPHA_SQ * TAU / (2 * H_Y * H_Y); 
+            A[j][j + 1] =  ALPHA_SQ * TAU / (2 * H_Y * H_Y);
+            b[j] = -1 * prev_sol_col[j] - TAU * ALPHA_SQ / (2 * H_X * H_X) * (prev_sol[i + 1][j] - 2 * prev_sol[i][j] + prev_sol[i - 1][j]);
+        }
+
+        A[A.rows - 1][A.rows - 1] = 1;
+        b[A.rows - 1] = U_Y_1(x, L, t);
+        col_sol = Tridiagonal_matrix_algorithm(A, b);
+        embed_vector(sol, col_sol, true, i);
+    }
+    
+    for(int j = 0; j < prev_sol.rows; j++){
+        sol[0][j] = U_Y_0(j*H_X, 0, t);
+        sol[sol.rows-1][j] = U_Y_1(j*H_X, L, t);
+    }
+
+    for(int j = 0; j < prev_sol.cols; j++){
+        sol[j][0] = U_X_0(0, j*H_Y, t);
+        sol[j][sol.cols-1] = U_X_1(L, j*H_Y, t);
+    }
+
+    return sol;
+}
+
+Matrix horizontal2(Matrix& prev_sol, float k)
 {
     Matrix sol(prev_sol.cols, prev_sol.rows);
     Vector row_sol(prev_sol.cols);
@@ -70,7 +151,7 @@ Matrix horizontal(Matrix& prev_sol, float k)
     return sol;
 }
 
-Matrix vertical(Matrix& prev_sol, float k)
+Matrix vertical2(Matrix& prev_sol, float k)
 {
     Matrix sol(prev_sol.cols, prev_sol.rows);
     Vector col_sol(prev_sol.rows);

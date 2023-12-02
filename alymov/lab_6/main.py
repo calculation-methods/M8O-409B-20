@@ -9,14 +9,18 @@ plt.style.use("Solarize_Light2")
 
 parser = argparse.ArgumentParser(description='Solve PDE and draw it')
 
+parser.add_argument("-r", "--resolve", action="store_true",
+                    help="calculate solution again(linux only)")
+
 parser.add_argument("-i", "--impl", action="store_true",
                     help="implicit solution(default - explicit)")
 args = parser.parse_args()
 
-if(args.impl):
-    subprocess.call(["./prog", "0"])
-if(args.impl):
-    subprocess.call(["./prog", "1"])
+if(args.resolve):
+    if(args.impl):
+        subprocess.call(["./prog", "0"])
+    if(args.impl):
+        subprocess.call(["./prog", "1"])
 
 sol = []
 with open('sol.csv', 'r') as file:
@@ -41,4 +45,5 @@ ax[0].plot_surface(X, T, sol)
 zs = np.array(solution(np.ravel(X), np.ravel(T)))
 Z = zs.reshape(X.shape)
 ax[1].plot_surface(X, T, Z)
+plt.savefig("lab_6_1.png")
 plt.show()

@@ -26,9 +26,12 @@
 #define U_XY(x, y) cos(MU_1 * x) * cos(MU_2 * y)
 
 //function declaration
+static int method;
 void embed_vector(Matrix& A, Vector& b, bool cols, int ind);
-Matrix horizontal(Matrix& prev_sol, float k);
-Matrix vertical(Matrix& prev_sol, float k);
+Matrix horizontal1(Matrix& prev_sol, float k);
+Matrix vertical1(Matrix& prev_sol, float k);
+Matrix horizontal2(Matrix& prev_sol, float k);
+Matrix vertical2(Matrix& prev_sol, float k);
 Matrix init();
 Matrix step(Matrix& prev, int k);
 std::vector<Matrix> alterning_direction_method();

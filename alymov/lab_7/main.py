@@ -10,7 +10,7 @@ plt.style.use("Solarize_Light2")
 parser = argparse.ArgumentParser(description='Solve PDE and draw it')
 
 parser.add_argument("-s", "--sol", action="store_true",
-                    help="resolve eq")
+                    help="resolve eq", description="Linux only")
 args = parser.parse_args()
 
 if(args.sol):
