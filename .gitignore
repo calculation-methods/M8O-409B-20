@@ -1,2 +1,2 @@
-alymov/**/build/*
-alymov/**/*vscode
+.vscode
+alymov/**/.vscode
