@@ -3,7 +3,7 @@
 #include <fstream>
 #include <cmath>
 #include <vector>
-#include "math/solver.hpp"
+#include "../math/solver.hpp"
 
 using namespace std;
 

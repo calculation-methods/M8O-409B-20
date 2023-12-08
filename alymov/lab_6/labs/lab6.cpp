@@ -22,7 +22,7 @@ double b_1(double t)
 
 void save_to_file(vector<Vector> sol)
 {
-    ofstream file("sol.csv");
+    ofstream file("../sol.csv");
     for(int k=0; k<sol.size(); k++)
     {
         for(int j=0; j<sol[k].len; j++)

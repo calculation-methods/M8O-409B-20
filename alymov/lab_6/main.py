@@ -18,9 +18,9 @@ args = parser.parse_args()
 
 if(args.resolve):
     if(args.impl):
-        subprocess.call(["./prog", "0"])
+        subprocess.call(["./build/prog", "0"])
     if(args.impl):
-        subprocess.call(["./prog", "1"])
+        subprocess.call(["./build/prog", "1"])
 
 sol = []
 with open('sol.csv', 'r') as file:
