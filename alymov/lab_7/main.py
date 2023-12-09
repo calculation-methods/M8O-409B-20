@@ -10,11 +10,11 @@ plt.style.use("Solarize_Light2")
 parser = argparse.ArgumentParser(description='Solve PDE and draw it')
 
 parser.add_argument("-s", "--sol", action="store_true",
-                    help="resolve eq", description="Linux only")
+                    help="resolve eq")
 args = parser.parse_args()
 
 if(args.sol):
-    subprocess.call(["./prog"])
+    subprocess.call(["./build/prog"])
 
 sol = []
 with open('sol.csv', 'r') as file:

@@ -1,5 +1,5 @@
 #pragma once
-#include "math/solver.hpp"
+#include "../math/solver.hpp"
 #include <vector>
 #include <fstream>
 //define constants and parameters

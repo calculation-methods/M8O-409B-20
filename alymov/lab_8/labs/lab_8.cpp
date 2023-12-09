@@ -212,7 +212,7 @@ void embed_vector(Matrix& A, Vector& b, bool cols, int ind)
 
 void save_to_file(std::vector<Matrix>& system)
 {
-    std::ofstream file("sol.csv");
+    std::ofstream file("../sol.csv");
 
     for(int cnt=0; cnt<system.size(); cnt++){
         Matrix& sol = system[cnt];

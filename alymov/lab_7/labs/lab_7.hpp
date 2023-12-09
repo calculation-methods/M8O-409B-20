@@ -1,5 +1,5 @@
 #pragma once
-#include "math/solver.hpp"
+#include "../math/solver.hpp"
 
 #define U_X_0(x, y) y
 #define U_X_1(x, y) 1 + y
