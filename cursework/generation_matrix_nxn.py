@@ -8,7 +8,7 @@ from scipy.sparse import csc_matrix, rand
 parser = argparse.ArgumentParser()
 
 output = "matrix100.txt"
-shape = int(input())
+shape = int(input("Введите размерность матрицы (n>3) => "))
 if shape < 3:
     exit()
 
@@ -28,3 +28,5 @@ with open(output, "w") as f:
     for i in d:
         f.write(f"{i} ")
     f.write("\n")
+
+print("Готово")
