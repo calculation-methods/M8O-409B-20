@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblab6.a CMakeFiles/lab6.dir/labs/lab6.cpp.o
+/usr/bin/ranlib liblab6.a
