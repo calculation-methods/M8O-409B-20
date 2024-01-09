@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from math import sqrt
 
-
 def psi(x):
     return 0
 
@@ -18,7 +17,6 @@ def dpsidxx(x):
 
 def phi0(t):
     return 0
-
 
 def phi1(t):
     return 0

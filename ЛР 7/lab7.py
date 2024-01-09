@@ -11,7 +11,6 @@ def stop(L,U,x,y):
                 maxx = abs(U[i,j] - L[i,j])
     return maxx
 
-
 def true_fval(x, y):
     return x*np.cos(y)
 

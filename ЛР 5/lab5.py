@@ -7,7 +7,6 @@ from math import sqrt
 def psi(x):
     return 0
 
-
 def phi0(t):
     return 0
 

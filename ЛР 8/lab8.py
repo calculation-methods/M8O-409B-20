@@ -16,6 +16,7 @@ def phi2(y, t, a):
     return -np.sinh(y) * np.exp(-3*a* t)
 
 
+
 def phi3(x, t, a):
     return np.cos(2*x) * np.exp(-3*a* t)
 
