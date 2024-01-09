@@ -1,0 +1,6 @@
+/home/maly/M8O-409B-20/alymov/lab_6/build/CMakeFiles/solver.dir
+/home/maly/M8O-409B-20/alymov/lab_6/build/CMakeFiles/matrix.dir
+/home/maly/M8O-409B-20/alymov/lab_6/build/CMakeFiles/lab6.dir
+/home/maly/M8O-409B-20/alymov/lab_6/build/CMakeFiles/prog.dir
+/home/maly/M8O-409B-20/alymov/lab_6/build/CMakeFiles/edit_cache.dir
+/home/maly/M8O-409B-20/alymov/lab_6/build/CMakeFiles/rebuild_cache.dir
